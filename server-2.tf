@@ -1,13 +1,3 @@
-# Note: you'll need to run 'terraform init' before terraform apply-ing this, because 'random_password' is a new provider
-# Generate a Random password for our domain controller
-resource "random_password" "domain_controller_password-2" {
-  length = 16
-}
-# ... and make sure it's shown to us in the console output of 'terraform apply'
-output "domain_controller_password-2" {
-  value = random_password.domain_controller_password-2.result
-  sensitive = true
-}
 # VM for our domain controller
 resource "azurerm_virtual_machine" "domain_controller-2" {
   name                  = "DC-2"
@@ -34,7 +24,7 @@ resource "azurerm_virtual_machine" "domain_controller-2" {
     computer_name  = "DC-2"
     # Note: you can't use admin or Administrator in here, Azure won't allow you to do so :-)
     admin_username = "sequel-admin"
-    admin_password = random_password.domain_controller_password-2.result
+    admin_password = random_password.domain_controller_password.result
   }
   os_profile_windows_config {
     # Enable WinRM - we'll need to later
