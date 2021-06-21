@@ -2,6 +2,7 @@
 # Generate a Random password for our domain controller
 resource "random_password" "domain_controller_password" {
   length = 16
+  special = true 
 }
 # ... and make sure it's shown to us in the console output of 'terraform apply'
 output "domain_controller_password" {
