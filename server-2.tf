@@ -13,7 +13,7 @@ resource "azurerm_virtual_machine" "domain_controller-2" {
   name                  = "DC-2"
   location              = azurerm_resource_group.resourcegroup.location
   resource_group_name   = azurerm_resource_group.resourcegroup.name
-  network_interface_ids = [azurerm_network_interface.domain-controller.id]
+  network_interface_ids = [azurerm_network_interface.domain-controller-2.id]
   # List of available sizes: https://docs.microsoft.com/en-us/azure/cloud-services/cloud-services-sizes-specs
   vm_size               = "Standard_D1_v2"
   # Base image
@@ -27,7 +27,7 @@ resource "azurerm_virtual_machine" "domain_controller-2" {
   # Disk
   delete_os_disk_on_termination = true
   storage_os_disk {
-    name              = "domain-controller-os-disk"
+    name              = "domain-controller-os-disk-2"
     create_option     = "FromImage"
   }
   os_profile {

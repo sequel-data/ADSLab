@@ -40,9 +40,46 @@ resource "azurerm_network_security_group" "domain_controller" {
     destination_address_prefix = "*"
   }
 }
+# Network security group
+resource "azurerm_network_security_group" "domain_controller-2" {
+  name                = "domain-controller-nsg-2"
+  location            = azurerm_resource_group.resourcegroup.location
+  resource_group_name = azurerm_resource_group.resourcegroup.name
 
+  # RDP
+  security_rule {
+    name                       = "Allow-RDP"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "3389"
+    source_address_prefix      = "${local.outgoing_ip}/32"
+    destination_address_prefix = "*"
+  }
+
+  # WinRM
+  security_rule {
+    name                       = "Allow-WinRM"
+    priority                   = 101
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "5985"
+    source_address_prefix      = "${local.outgoing_ip}/32"
+    destination_address_prefix = "*"
+  }
+}
 # Associate our network security group with the NIC of our domain controller
 resource "azurerm_network_interface_security_group_association" "domain_controller" {
   network_interface_id      = azurerm_network_interface.domain-controller.id
   network_security_group_id = azurerm_network_security_group.domain_controller.id
 }
+# Associate our network security group with the NIC of our domain controller
+resource "azurerm_network_interface_security_group_association" "domain_controller-2" {
+  network_interface_id      = azurerm_network_interface.domain-controller-2.id
+  network_security_group_id = azurerm_network_security_group.domain_controller-2.id
+}
+
